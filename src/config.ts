@@ -1,7 +1,10 @@
 import { readFile, writeFile } from 'fs/promises';
 
 export type ConfigSource = {
-    type: "url" | "csv";
+    type: "url";
+    value: string[];
+} | {
+    type: "csv";
     value: string;
 }
 
@@ -9,6 +12,7 @@ export type CssSelector = string;
 export type OutputSelector = "*" | ">" | string;
 
 export type Extractor = {
+    name: string;
     query: CssSelector;
     output: OutputSelector;
 }
@@ -23,11 +27,12 @@ export function defaultConfig(): Config {
     return {
         source: {
             type: "url",
-            value: "http://..."
+            value: ["https://..."]
         },
         destination: "stdout",
         extraction: [
             {
+                name: "Title",
                 query: "head title",
                 output: "*"
             }

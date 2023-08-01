@@ -4,6 +4,8 @@ import { defaultConfig, readConfig } from './config';
 import WebScraper from './web-scraper';
 import AxiosWebClient from './web-clients/axios-web-client';
 import CachedWebClient from './web-clients/cached-web-client';
+import "./util/array.extensions"
+import "./util/string.extensions"
 
 async function main() {
     var args = process.argv;
@@ -30,10 +32,17 @@ async function main() {
         return;
     }
 
-    const doc = await webScraper.fetchDocument(config.source.value);
-    console.log(doc.querySelector("head title").outerHTML)
-    const elements = webScraper.extractMatches(doc, config.extraction);
-    console.log(elements);
+    const output : any[] = []
+    for (const url of config.source.value) {
+        const doc = await webScraper.fetchDocument(url);
+        const elements = webScraper.extractMatches(doc, config.extraction);
+        let line = {url};
+        for (const result of elements) {
+            line[result.name] = result.content.first().truncate();
+        }
+        output.push(line);
+    }
+    console.table(output);
 }
 
 main();

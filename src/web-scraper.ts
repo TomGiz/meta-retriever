@@ -4,6 +4,7 @@ import { Extractor, OutputSelector } from './config';
 import WebClient from './web-clients/web-client';
 
 export type WebScrapedElement = {
+    name: string;
     selector: string;
     content: string[];
 }
@@ -24,7 +25,7 @@ export default class WebScraper {
     extractMatches(document: Document, extractors: Extractor[]): WebScrapedElement[] {
         return extractors.map(ex => {
             const content = Array.from(document.querySelectorAll(ex.query)).map(el => this.extractContent(el, ex.output));
-            return { selector: ex.query, content: content };
+            return { name: ex.name, selector: ex.query, content: content };
         });
     }
     private extractContent(el: Element, os: OutputSelector) {
