@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { JSDOM } from 'jsdom';
 import { Extractor, OutputSelector } from './config';
+import WebClient from './web-clients/web-client';
 
 export type WebScrapedElement = {
     selector: string;
@@ -8,18 +9,12 @@ export type WebScrapedElement = {
 }
 
 export default class WebScraper {
-    constructor() {
+    private _webClient: WebClient;
+    constructor(webClient: WebClient) {
+        this._webClient = webClient;
     }
     async fetchPage(url: string): Promise<string | undefined> {
-        const html = axios
-            .get(url)
-            .then(res => res.data)
-            .catch((error: AxiosError) => {
-                console.error(`Error retrieving HTML from ${error.config.url}.`);
-                console.error(error.toJSON());
-            });
-
-        return html;
+        return this._webClient.get(url);
     }
     async fetchDocument(url: string) {
         const page = await this.fetchPage(url);
@@ -28,11 +23,12 @@ export default class WebScraper {
     }
     extractMatches(document: Document, extractors: Extractor[]): WebScrapedElement[] {
         return extractors.map(ex => {
-            return { selector: ex.query, content: Array.from(document.querySelectorAll(ex.query)).map(el => this.extractContent(el, ex.output)) };
+            const content = Array.from(document.querySelectorAll(ex.query)).map(el => this.extractContent(el, ex.output));
+            return { selector: ex.query, content: content };
         });
     }
     private extractContent(el: Element, os: OutputSelector) {
-        switch(os) {
+        switch (os) {
             case "*": return el.outerHTML;
             case ">": return el.innerHTML;
             default: return el.getAttribute(os);

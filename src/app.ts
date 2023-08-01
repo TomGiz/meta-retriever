@@ -2,6 +2,8 @@ import fs from 'fs';
 import process from 'process';
 import { defaultConfig, readConfig } from './config';
 import WebScraper from './web-scraper';
+import AxiosWebClient from './web-clients/axios-web-client';
+import CachedWebClient from './web-clients/cached-web-client';
 
 async function main() {
     var args = process.argv;
@@ -21,7 +23,8 @@ async function main() {
     const config = await readConfig(configPath);
     // console.log(config)
 
-    const webScraper = new WebScraper();
+    const webClient = new CachedWebClient(new AxiosWebClient());
+    const webScraper = new WebScraper(webClient);
     if (config.source.type !== "url") {
         console.log(`no support yet for source type ${config.source.type}`);
         return;

@@ -6,3 +6,6 @@ dist/
 
 # config file (build your own with 'npm run start init'
 config.json
+
+# cached web responses
+.cache/
