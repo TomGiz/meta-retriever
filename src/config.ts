@@ -2,10 +2,10 @@ import { readFile, writeFile } from 'fs/promises';
 
 export type ConfigSource = {
     type: "url";
-    value: string[];
+    urls: string[];
 } | {
     type: "csv";
-    value: string;
+    path: string;
 }
 
 export type CssSelector = string;
@@ -27,7 +27,7 @@ export function defaultConfig(): Config {
     return {
         source: {
             type: "url",
-            value: ["https://..."]
+            urls: ["https://..."]
         },
         destination: "stdout",
         extraction: [

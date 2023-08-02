@@ -16,6 +16,10 @@ declare global {
         maxBy<V>(selector: (arg0: T) => V): V;
 
         minBy<V>(selector: (arg0: T) => V): V;
+
+        take(count: number): Array<T>;
+
+        any(selector: (arg0: T) => boolean): boolean;
     }
 }
 export { };
@@ -50,3 +54,13 @@ Array.prototype.minBy = function (selector) {
     return this.map(selector).min();
 };
 
+Array.prototype.take = function (count) {
+    return this.slice(0, count-1);
+};
+
+Array.prototype.any = function (selector) {
+    for (const el of this) {
+        if (selector(el)) return true;
+    }
+    return false;
+};
