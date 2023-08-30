@@ -55,7 +55,7 @@ Array.prototype.minBy = function (selector) {
 };
 
 Array.prototype.take = function (count) {
-    return this.slice(0, count-1);
+    return this.slice(0, count);
 };
 
 Array.prototype.any = function (selector) {

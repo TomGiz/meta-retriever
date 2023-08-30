@@ -24,7 +24,7 @@ export default class CachedWebClient implements WebClient {
             await mkdir(cacheDirPath);
         }
         this._logger.trace(`Getting data for ${url}...`);
-        const filePath = resolve(__dirname, `.cache/${Buffer.from(url).toString('base64')}.html`)
+        const filePath = resolve(__dirname, `.cache/${Buffer.from(url).toString('base64url')}.html`)
         if (await fileExists(filePath) === true) {
             this._logger.info(`Retrieved ${url} from cache`);
             return await readFile(filePath, { encoding: 'utf8' });
