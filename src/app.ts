@@ -37,7 +37,7 @@ async function main() {
         const csv = await csvReader.read(config.source.path);
         const okLines: string[] = [];
         const nokLines: any[] = [];
-        for(const line of csv) {
+        for(const line of csv/*.take(10)*/) {
             const url = line["URL"];
             const doc = await webScraper.fetchDocument(url);
             const elements = webScraper.extractMatches(doc, config.extraction);
@@ -52,7 +52,10 @@ async function main() {
                 okLines.push(url);
             }
         }
-        console.log(`Found ${okLines.length} URL that have DOM data as requested.`)
+        console.log(`Found ${okLines.length} URL that have DOM data as requested:`)
+        console.table(okLines);
+
+
         console.log(`Found ${nokLines.length} URL that have DOM data that did not match the requested:`)
         console.table(nokLines);
         return;
